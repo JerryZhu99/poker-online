@@ -1,6 +1,17 @@
+import "./assets/styles.css";
 
-window.onload = function(){
-    document.querySelector("body").innerHTML = "Hello World!";
-};
+import io from "socket.io-client";
+import Vue from "vue";
 
-console.log("hi");
+var socket = io();
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        messages: ["Start of messages"]
+    }
+});
+
+socket.on('message', function(data){
+    app.messages.push(data);
+});
