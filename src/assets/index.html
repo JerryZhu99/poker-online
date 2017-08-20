@@ -10,10 +10,42 @@
 </head>
 
 <body>
-    <div id="app">
-        <div v-for="message in messages">
-            {{message}}
+    <div id="wrapper">
+        <div id="opponents">
+
         </div>
+        <div id="table">
+            
+        </div>
+        <div id="player">
+            <div id="player-cards">
+                <div class="card-container" v-for="card in player.cards">
+                    <div class="card">
+                        <div class="card-top">
+                            {{card.value}}
+                            <br>
+                            {{card.suit}}
+                        </div>
+                        <div class="card-center">
+                            {{card.suit}}
+                        </div>
+                        <div class="card-bottom">
+                            {{card.value}}
+                            <br>                            
+                            {{card.suit}}
+                        </div>
+                    </div>
+                </div>    
+            </div>
+            <div id="messages">
+                <p class="message" v-for="message in messages">{{message}}</p>
+                <form id="send" name="send" onsubmit="return false">
+                    <input type="text" v-model="newMessage">
+                    <input type="submit" value="Send">
+                </form>
+            </div>
+        </div>
+
     </div>
 </body>
 

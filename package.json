@@ -4,6 +4,7 @@
     "express": "^4.15.4",
     "extract-text-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^2.30.1",
+    "normalize.css": "^7.0.0",
     "passport": "^0.4.0",
     "path": "^0.12.7",
     "socket.io": "^2.0.3",

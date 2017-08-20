@@ -13,6 +13,12 @@ var users = 0;
 io.on('connection', function(socket){
     users++;
     io.emit('message', "User connected: "+users+" users online");
+
+    socket.on('message', function(message){
+        io.emit('message', "Message: " + message);
+        io.emit('message', "Reverse: " + message.split("").reverse().join(""));
+    })
+
     socket.on('disconnect', function(){
         users--;
         io.emit('message', "User disconnected: "+users+" users online");        

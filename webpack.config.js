@@ -2,6 +2,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 
+
+
 module.exports = {
     entry: "./src/app.js",
     output: {
@@ -10,6 +12,13 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.(jpg|png|svg)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                },
+            },
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract({
@@ -27,9 +36,14 @@ module.exports = {
         new ExtractTextPlugin({filename:"index.css"})
     ],
     resolve: {
+        modules: [
+            "src",
+            "node_modules",
+        ],        
         alias: {
-          'vue$': 'vue/dist/vue.esm.js' // 'vue/dist/vue.common.js' for webpack 1
+          'vue$': 'vue/dist/vue.esm.js' 
         }
     },
-    devtool: "source-map"
+    devtool: "source-map",
+    node: { console: true },
 };
