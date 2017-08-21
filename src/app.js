@@ -22,6 +22,16 @@ var app = new Vue({
     }
 });
 
+function getRandomCard(){
+    socket.emit("random card", {}); 
+}
+document.getElementById("random-card").addEventListener("click", getRandomCard);
+
+socket.on("random card", function(data){
+    app.player.cards.push(data);
+    console.log(app.player);
+})
+
 
 function send(event){
     socket.emit("message", app.newMessage);

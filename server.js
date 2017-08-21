@@ -14,6 +14,13 @@ io.on('connection', function(socket){
     users++;
     io.emit('message', "User connected: "+users+" users online");
 
+    socket.on('random card', function(){
+        socket.emit('random card', {
+            suit: ["♠","♥","♦","♣"][Math.floor(Math.random()*4)],
+            value: ["A","2","3","4","5","6","7","8","9","10","J","Q","K"][Math.floor(Math.random()*13)]            
+        })
+    })
+
     socket.on('message', function(message){
         io.emit('message', "Message: " + message);
         io.emit('message', "Reverse: " + message.split("").reverse().join(""));

@@ -47,12 +47,11 @@ body{
 #player-cards{
     flex: 1;    
     width: 30%;
+    display: flex;
 }
 .card-container{
     padding: 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: left;
+
 }
 .card{
     font-family: 'Oswald', sans-serif;
