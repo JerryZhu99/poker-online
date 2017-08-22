@@ -1,11 +1,12 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
+var nodeExternals = require('webpack-node-externals');
 
 
 
-module.exports = {
-    entry: "./src/app.js",
+module.exports = [{
+    entry: "./src/client.js",
     output: {
         path: path.resolve(__dirname,"dist"),
         filename: "bundle.js"
@@ -46,4 +47,21 @@ module.exports = {
     },
     devtool: "source-map",
     node: { console: true },
-};
+},
+{
+    entry: "./src/server.js",
+    target: "node",
+    output: {
+        path: path.resolve(__dirname),
+        filename: "server.js",
+        libraryTarget: 'commonjs2'        
+    },
+    resolve: {
+        modules: [
+            "src",
+            "node_modules",
+        ]
+    },
+    externals: [nodeExternals()],
+
+}];
