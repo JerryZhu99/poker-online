@@ -1,7 +1,7 @@
-_valuestr=["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
-_suitstr=["♦","♣","♥","♠"]
+var _valuestr=["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
+var _suitstr=["♦","♣","♥","♠"];
 
-class Card{
+export class Card{
     constructor(value, suit){
         this.value=value;
         this.suit=suit;
@@ -18,9 +18,13 @@ class Card{
     valueOf(){
         return this.value*4+this.suit;
     }
+
+    view(){
+        return {value:this.valuestr, suit:this.suitstr};
+    }
 }
 
-class Deck{
+export class Deck{
     constructor(){
         this.cards=new Array(52);
         for(var i=0;i<13;i++)for(var j=0;j<4;j++)this.cards[i*4+j]=new Card(i,j);
@@ -49,9 +53,9 @@ class Deck{
 }
 
 // test
-
+/*
 d=new Deck();
 while(d.cards.length>0){
     card = d.draw();
     console.log(card.valuestr+ " "+card.suitstr+" "+card.valueOf());
-}
+}*/

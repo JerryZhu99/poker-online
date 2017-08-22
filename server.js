@@ -76,8 +76,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_http__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_socket_io__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_socket_io__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_card_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_card_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_card_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_card_js__ = __webpack_require__(4);
 
 const app = __WEBPACK_IMPORTED_MODULE_0_express___default()();
 
@@ -98,11 +97,9 @@ io.on('connection', function(socket){
     users++;
     io.emit('message', "User connected: "+users+" users online");
 
+    var d=new __WEBPACK_IMPORTED_MODULE_3_card_js__["a" /* Deck */]();
     socket.on('random card', function(){
-        socket.emit('random card', {
-            suit: ["♠","♥","♦","♣"][Math.floor(Math.random()*4)],
-            value: ["A","2","3","4","5","6","7","8","9","10","J","Q","K"][Math.floor(Math.random()*13)]            
-        })
+        socket.emit('random card', d.draw().view());
     })
 
     socket.on('message', function(message){
@@ -139,12 +136,12 @@ module.exports = require("http");
 module.exports = require("socket.io");
 
 /***/ }),
-/* 4 */,
-/* 5 */
-/***/ (function(module, exports) {
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-_valuestr=["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
-_suitstr=["♦","♣","♥","♠"]
+"use strict";
+var _valuestr=["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
+var _suitstr=["♦","♣","♥","♠"];
 
 class Card{
     constructor(value, suit){
@@ -163,7 +160,13 @@ class Card{
     valueOf(){
         return this.value*4+this.suit;
     }
+
+    view(){
+        return {value:this.valuestr, suit:this.suitstr};
+    }
 }
+/* unused harmony export Card */
+
 
 class Deck{
     constructor(){
@@ -192,14 +195,16 @@ class Deck{
         return this.cards.pop();
     }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = Deck;
+
 
 // test
-
+/*
 d=new Deck();
 while(d.cards.length>0){
     card = d.draw();
     console.log(card.valuestr+ " "+card.suitstr+" "+card.valueOf());
-}
+}*/
 
 /***/ })
 /******/ ]);
