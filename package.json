@@ -12,21 +12,28 @@
     "style-loader": "^0.18.2",
     "vue": "^2.4.2",
     "webpack": "^3.5.4",
+    "webpack-merge": "^4.1.0",
     "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
     "start": "node server.js",
     "build": "webpack",
-    "build-dev": "webpack --progress --colors --watch"
+    "build-dev": "webpack --progress --colors --watch",
+    "test": "webpack -w --config webpack-test.config.js"
   },
   "name": "poker-online",
   "version": "1.0.0",
   "main": "server.js",
   "devDependencies": {
+    "chai": "^4.1.1",
     "css-loader": "^0.28.5",
+    "enhanced-require": "^0.5.0-beta6",
+    "mocha": "^3.5.0",
+    "mocha-loader": "^1.1.1",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.4",
-    "webpack-dev-server": "^2.7.1"
+    "webpack-dev-server": "^2.7.1",
+    "webpack-shell-plugin": "^0.5.0"
   },
   "keywords": [],
   "author": "Jerry Zhu",

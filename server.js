@@ -140,6 +140,7 @@ module.exports = require("socket.io");
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+
 var _valuestr = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 var _suitstr = ["♦", "♣", "♥", "♠"];
 
@@ -149,6 +150,7 @@ class Card {
     constructor(value, suit) {
         this.value = value;
         this.suit = suit;
+
     }
 
     get valuestr() {
@@ -174,6 +176,7 @@ class Deck {
     constructor() {
         this.cards = new Array(52);
         for (var i = 0; i < 13; i++)for (var j = 0; j < 4; j++)this.cards[i * 4 + j] = new Card(i, j);
+
         this.shuffle();
     }
 
@@ -324,6 +327,7 @@ while(d.cards.length>0){
     card = d.draw();
     console.log(card.valuestr+ " "+card.suitstr+" "+card.valueOf());
 }*/
+
 
 /***/ })
 /******/ ]);
