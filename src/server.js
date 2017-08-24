@@ -1,5 +1,5 @@
 import express from 'express';
-const app = express();
+export const app = express();
 import httpModule from 'http';
 const http = httpModule.Server(app);
 import socketIO from 'socket.io';
@@ -13,7 +13,7 @@ app.get('/api', function(req, res){
     res.send("/api");
 })
 
-var users = 0;
+export var users = 0;
 io.on('connection', function(socket){
     users++;
     io.emit('message', "User connected: "+users+" users online");

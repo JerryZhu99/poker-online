@@ -4,9 +4,8 @@ import "assets/felt.png";
 import io from "socket.io-client";
 import Vue from "vue";
 
-var socket = io();
-
-var app = new Vue({
+export const socket = io();
+export const view = new Vue({
     el: '#wrapper',
     data: {
         messages: ["Start of messages"],
@@ -28,18 +27,17 @@ function getRandomCard(){
 document.getElementById("random-card").addEventListener("click", getRandomCard);
 
 socket.on("random card", function(data){
-    app.player.cards.push(data);
-    console.log(app.player);
+    view.player.cards.push(data);
 })
 
 
 function send(event){
-    socket.emit("message", app.newMessage);
-    app.newMessage = "";
+    socket.emit("message", view.newMessage);
+    view.newMessage = "";
 }
 
 document.getElementById("send").addEventListener("submit", send);
 
 socket.on('message', function(data){
-    app.messages.push(data);
+    view.messages.push(data);
 });

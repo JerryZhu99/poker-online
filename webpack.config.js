@@ -9,7 +9,9 @@ module.exports = [{
     entry: "./src/client.js",
     output: {
         path: path.resolve(__dirname,"dist"),
-        filename: "bundle.js"
+        filename: "bundle.js",
+        libraryTarget: "var",
+        library: "app"
     },
     module: {
         rules: [
@@ -45,16 +47,21 @@ module.exports = [{
           'vue$': 'vue/dist/vue.esm.js' 
         }
     },
-    devtool: "source-map",
+    devtool: "inline-source-map",
     node: { console: true },
 },
 {
     entry: "./src/server.js",
     target: "node",
+    node: {
+        console: true,
+    },
     output: {
         path: path.resolve(__dirname),
         filename: "server.js",
-        libraryTarget: 'commonjs2'        
+        libraryTarget: 'var',
+        library: "app",
+        devtoolModuleFilenameTemplate: '[absolute-resource-path]'        
     },
     resolve: {
         modules: [
@@ -63,5 +70,5 @@ module.exports = [{
         ]
     },
     externals: [nodeExternals()],
-
+    devtool: 'inline-source-map'
 }];
