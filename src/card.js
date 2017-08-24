@@ -8,7 +8,6 @@ export class Card {
     constructor(value, suit) {
         this.value = value;
         this.suit = suit;
-
     }
 
     get valuestr() {
@@ -65,20 +64,20 @@ export class Hand {
         this.cardsSorted.sort(function (a, b) {
             return a.valueOf() - b.valueOf();
         });
-        this.rank=-1;
-        if(this.rank==-1&&this.calcRoyalFlush())this.rank=9;
-        if(this.rank==-1&&this.calcStraightFlush())this.rank=8;
-        if(this.rank==-1&&this.calcFourOfAKind())this.rank=7;
-        if(this.rank==-1&&this.calcFullHouse())this.rank=6;
-        if(this.rank==-1&&this.calcFlush())this.rank=5;
-        if(this.rank==-1&&this.calcStraight())this.rank=4;
-        if(this.rank==-1&&this.calcThreeOfAKind())this.rank=3;
-        if(this.rank==-1&&this.calcTwoPair())this.rank=2;
-        if(this.rank==-1&&this.calcOnePair())this.rank=1;
-        if(this.rank==-1)this.rank=0;
+        this.rank = -1;
+        if (this.rank == -1 && this.calcRoyalFlush()) this.rank = 9;
+        if (this.rank == -1 && this.calcStraightFlush()) this.rank = 8;
+        if (this.rank == -1 && this.calcFourOfAKind()) this.rank = 7;
+        if (this.rank == -1 && this.calcFullHouse()) this.rank = 6;
+        if (this.rank == -1 && this.calcFlush()) this.rank = 5;
+        if (this.rank == -1 && this.calcStraight()) this.rank = 4;
+        if (this.rank == -1 && this.calcThreeOfAKind()) this.rank = 3;
+        if (this.rank == -1 && this.calcTwoPair()) this.rank = 2;
+        if (this.rank == -1 && this.calcOnePair()) this.rank = 1;
+        if (this.rank == -1) { this.major = new Array(5); for (var i = 0; i < 5; i++)this.major[i] = this.cardsSorted[4 - i].value; this.rank = 0; }
     }
 
-    get rankstr(){
+    get rankstr() {
         return _rankstr[this.rank];
     }
 
@@ -87,6 +86,7 @@ export class Hand {
             if (this.cardsSorted[i].value != i + 8) return false;
         for (var i = 1; i < 5; i++)
             if (this.cardsSorted[i].suit != this.cardsSorted[i - 1].suit) return false;
+        this.major = new Array(0);
         return true;
     }
 
@@ -95,12 +95,13 @@ export class Hand {
             if (this.cardsSorted[i].value != this.cardsSorted[i - 1].value + 1) return false;
         for (var i = 1; i < 5; i++)
             if (this.cardsSorted[i].suit != this.cardsSorted[i - 1].suit) return false;
+        this.major = [this.cardsSorted[4].value];
         return true;
     }
 
     calcFourOfAKind() {
-        if (this._calcFourOfAKind(0)) return true;
-        if (this._calcFourOfAKind(1)) return true;
+        if (this._calcFourOfAKind(0)) { this.major = [this.cardsSorted[0].value, this.cardsSorted[4].value]; return true; }
+        if (this._calcFourOfAKind(1)) { this.major = [this.cardsSorted[4].value, this.cardsSorted[0].value]; return true; }
         return false;
     }
 
@@ -111,8 +112,8 @@ export class Hand {
     }
 
     calcFullHouse() {
-        if (this._calcFullHouse(1)) return true;
-        if (this._calcFullHouse(2)) return true;
+        if (this._calcFullHouse(1)) { this.major = [this.cardsSorted[4].value, this.cardsSorted[0].value]; return true; }
+        if (this._calcFullHouse(2)) { this.major = [this.cardsSorted[0].value, this.cardsSorted[4].value]; return true; }
         return false;
     }
 
@@ -127,19 +128,22 @@ export class Hand {
     calcFlush() {
         for (var i = 1; i < 5; i++)
             if (this.cardsSorted[i].suit != this.cardsSorted[i - 1].suit) return false;
+        this.major = new Array(5);
+        for (var i = 0; i < 5; i++)this.major[i] = this.cardsSorted[4 - i].value;
         return true;
     }
 
     calcStraight() {
         for (var i = 1; i < 5; i++)
             if (this.cardsSorted[i].value != this.cardsSorted[i - 1].value + 1) return false;
+        this.major = [this.cardsSorted[4].value];
         return true;
     }
 
     calcThreeOfAKind() {
-        if (this._calcThreeOfAKind(0)) return true;
-        if (this._calcThreeOfAKind(1)) return true;
-        if (this._calcThreeOfAKind(2)) return true;
+        if (this._calcThreeOfAKind(0)) { this.major = [this.cardsSorted[0].value, this.cardsSorted[4].value, this.cardsSorted[3].value]; return true; }
+        if (this._calcThreeOfAKind(1)) { this.major = [this.cardsSorted[1].value, this.cardsSorted[4].value, this.cardsSorted[0].value]; return true; }
+        if (this._calcThreeOfAKind(2)) { this.major = [this.cardsSorted[2].value, this.cardsSorted[1].value, this.cardsSorted[0].value]; return true; }
         return false;
     }
 
@@ -150,9 +154,9 @@ export class Hand {
     }
 
     calcTwoPair() {
-        if (this._calcTwoPair(0, 2)) return true;
-        if (this._calcTwoPair(0, 3)) return true;
-        if (this._calcTwoPair(1, 3)) return true;
+        if (this._calcTwoPair(0, 2)) { this.major = [this.cardsSorted[2].value, this.cardsSorted[0].value, this.cardsSorted[4].value]; return true; }
+        if (this._calcTwoPair(0, 3)) { this.major = [this.cardsSorted[3].value, this.cardsSorted[0].value, this.cardsSorted[2].value]; return true; }
+        if (this._calcTwoPair(1, 3)) { this.major = [this.cardsSorted[3].value, this.cardsSorted[1].value, this.cardsSorted[0].value]; return true; }
         return false;
     }
 
@@ -163,10 +167,10 @@ export class Hand {
     }
 
     calcOnePair() {
-        if (this._calcOnePair(0)) return true;
-        if (this._calcOnePair(1)) return true;
-        if (this._calcOnePair(2)) return true;
-        if (this._calcOnePair(3)) return true;
+        if (this._calcOnePair(0)) { this.major = [this.cardsSorted[0].value, this.cardsSorted[4].value, this.cardsSorted[3].value, this.cardsSorted[2].value]; return true; }
+        if (this._calcOnePair(1)) { this.major = [this.cardsSorted[1].value, this.cardsSorted[4].value, this.cardsSorted[3].value, this.cardsSorted[0].value]; return true; }
+        if (this._calcOnePair(2)) { this.major = [this.cardsSorted[2].value, this.cardsSorted[4].value, this.cardsSorted[1].value, this.cardsSorted[0].value]; return true; }
+        if (this._calcOnePair(3)) { this.major = [this.cardsSorted[3].value, this.cardsSorted[2].value, this.cardsSorted[1].value, this.cardsSorted[0].value]; return true; }
         return false;
     }
 
