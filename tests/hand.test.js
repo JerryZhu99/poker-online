@@ -83,7 +83,7 @@ describe("Hand", () => {
         compareHands(h4, h3).should.equal(1);
         compareHands(h8, h7).should.equal(1);
         compareHands(h8, h7).should.equal(1);
-        
+
         compareHands(h2, h2).should.equal(0);
         compareHands(h8, h8).should.equal(0);
     });
@@ -96,4 +96,33 @@ describe("Hand", () => {
         maxHands([h]).should.deep.equal([h]);
     });
 
+    it('compare more hands', () => {
+        compareHands(
+            new Hand([new Card(12, 3), new Card(11, 3), new Card(9, 3), new Card(10, 3), new Card(8, 3)]),
+            new Hand([new Card(12, 2), new Card(11, 2), new Card(9, 2), new Card(10, 2), new Card(8, 2)])).should.equal(0);
+
+        compareHands(
+            new Hand([new Card(1, 3), new Card(3, 3), new Card(5, 3), new Card(2, 3), new Card(4, 3)]),
+            new Hand([new Card(3, 2), new Card(1, 2), new Card(2, 2), new Card(4, 2), new Card(5, 2)])).should.equal(0);
+
+        compareHands(
+            new Hand([new Card(3, 0), new Card(3, 3), new Card(3, 3), new Card(2, 0), new Card(2, 3)]),
+            new Hand([new Card(3, 0), new Card(2, 2), new Card(2, 2), new Card(2, 0), new Card(0, 2)])).should.equal(1);
+
+        compareHands(
+            new Hand([new Card(3, 0), new Card(3, 3), new Card(3, 3), new Card(2, 0), new Card(1, 3)]),
+            new Hand([new Card(3, 0), new Card(3, 2), new Card(2, 2), new Card(3, 0), new Card(0, 2)])).should.equal(1);
+
+        compareHands(
+            new Hand([new Card(5, 0), new Card(5, 3), new Card(2, 3), new Card(2, 0), new Card(1, 3)]),
+            new Hand([new Card(4, 0), new Card(4, 2), new Card(3, 2), new Card(3, 0), new Card(1, 2)])).should.equal(1);
+
+        compareHands(
+            new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]),
+            new Hand([new Card(3, 0), new Card(4, 2), new Card(5, 2), new Card(6, 0), new Card(2, 2)])).should.equal(1);
+
+        compareHands(
+            new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]),
+            new Hand([new Card(3, 2), new Card(4, 2), new Card(5, 2), new Card(6, 2), new Card(2, 2)])).should.equal(-1);
+    });
 });
