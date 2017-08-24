@@ -180,10 +180,25 @@ export class Hand {
 
 }
 
-// test
-/*
-d=new Deck();
-while(d.cards.length>0){
-    card = d.draw();
-    console.log(card.valuestr+ " "+card.suitstr+" "+card.valueOf());
-}*/
+export function compareHands(a, b) {
+    if (a.rank < b.rank) return -1;
+    if (a.rank > b.rank) return 1;
+    if (a.major < b.major) return -1;
+    if (a.major > b.major) return 1;
+    return 0;
+}
+
+export function maxHands(hands) {
+    if (hands.length == 0) return [];
+    var ans = [hands[0]];
+    for (var i = 1; i < hands.length; i++) {
+        var comp = compareHands(hands[i], ans[0]);
+        if (comp > 0) {
+            ans = [];
+        }
+        if (comp >= 0) {
+            ans.push(hands[i]);
+        }
+    }
+    return ans;
+}
