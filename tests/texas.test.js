@@ -10,6 +10,39 @@ describe("Texas Game", () => {
     it('should exist', () => {
         Table.should.exist;
     });
+    
+    it('get winner', () => {
+        var table = new Table();
+        table.addPlayer({ id: "player0" });
+        table.addPlayer({ id: "player1" });
+        table.addPlayer({ id: "player2" });
+        table.addPlayer({ id: "player3" });
+        table.players.length.should.equal(4);
+        // example case from
+        // https://en.wikipedia.org/wiki/Texas_hold_%27em
+        table.table = [new Card(2, 1), new Card(11, 3), new Card(2, 2), new Card(6, 3), new Card(5, 3)];
+        table.players[0].id.should.equal("player0");
+        table.players[1].id.should.equal("player1");
+        table.players[2].id.should.equal("player2");
+        table.players[3].id.should.equal("player3");
+
+        table.players[0].playing = table.players[1].playing = table.players[2].playing = table.players[3].playing = true;
+        table.players[0].isFolded = table.players[1].isFolded = table.players[2].isFolded = table.players[3].isFolded = false;
+
+        table.players[0].cards = [new Card(12, 1), new Card(2, 0)];
+        table.players[1].cards = [new Card(12, 3), new Card(7, 3)];
+        table.players[2].cards = [new Card(11, 2), new Card(11, 0)];
+        table.players[3].cards = [new Card(3, 0), new Card(4, 0)];
+
+        var w = table.getWinners();
+        w.length.should.equal(1);
+        w[0].cards.should.deep.include(new Card(2, 1));
+        w[0].cards.should.deep.include(new Card(2, 2));
+        w[0].cards.should.deep.include(new Card(11, 3));
+        w[0].cards.should.deep.include(new Card(11, 2));
+        w[0].cards.should.deep.include(new Card(11, 0));
+        w[0].player.id.should.equal("player2");
+    });
 
     let io = {
         messages: [],
@@ -115,36 +148,5 @@ describe("Texas Game", () => {
         table.table.length.should.equal(4);
     });
 
-    it('get winner', () => {
-        var table1 = new Table();
-        table1.addPlayer({ id: "player0" });
-        table1.addPlayer({ id: "player1" });
-        table1.addPlayer({ id: "player2" });
-        table1.addPlayer({ id: "player3" });
-        table1.players.length.should.equal(4);
-        // example case from
-        // https://en.wikipedia.org/wiki/Texas_hold_%27em
-        table1.table = [new Card(2, 1), new Card(11, 3), new Card(2, 2), new Card(6, 3), new Card(5, 3)];
-        table1.players[0].id.should.equal("player0");
-        table1.players[1].id.should.equal("player1");
-        table1.players[2].id.should.equal("player2");
-        table1.players[3].id.should.equal("player3");
-
-        table1.players[0].playing = table1.players[1].playing = table1.players[2].playing = table1.players[3].playing = true;
-        table1.players[0].isFolded = table1.players[1].isFolded = table1.players[2].isFolded = table1.players[3].isFolded = false;
-
-        table1.players[0].cards = [new Card(12, 1), new Card(2, 0)];
-        table1.players[1].cards = [new Card(12, 3), new Card(7, 3)];
-        table1.players[2].cards = [new Card(11, 2), new Card(11, 0)];
-        table1.players[3].cards = [new Card(3, 0), new Card(4, 0)];
-
-        var w = table1.getWinners();
-        w.length.should.equal(1);
-        w[0].cards.should.deep.include(new Card(2, 1));
-        w[0].cards.should.deep.include(new Card(2, 2));
-        w[0].cards.should.deep.include(new Card(11, 3));
-        w[0].cards.should.deep.include(new Card(11, 2));
-        w[0].cards.should.deep.include(new Card(11, 0));
-    });
 
 });
