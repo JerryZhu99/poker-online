@@ -62,7 +62,7 @@ describe("Texas Game", () => {
         table.newRound();
         io.messages[0].message.should.equal("update");
         io.messages[0].data.should.not.contain.keys("io", "deck");
-        io.messages[0].data.players.should.not.include.any.keys("io","cards");
+        io.messages[0].data.players.should.not.include.any.keys("io", "cards");
     });
     it('should wait for the current player', () => {
         socket.messages.should.deep.contain({
@@ -81,7 +81,17 @@ describe("Texas Game", () => {
         });
     });
     it('should allow the next player to raise', () => {
-        table.playerRaised(100);
         table.currentPlayer.should.equal(1)
+        table.playerRaised(100);
+        table.players[1].chips.should.equal(899);
+    });
+    it('should allow the next player to raise', () => {
+        table.currentPlayer.should.equal(0)
+        table.playerRaised(100);
+        table.players[0].chips.should.equal(799);
+    });
+    it('should not allow the next player to raise less', () => {
+        table.currentPlayer.should.equal(1)
+        table.playerRaised(50).should.throw(new Error("need to raise at least as much as previous raise"));
     });
 });

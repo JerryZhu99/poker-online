@@ -9,9 +9,8 @@ export default class Table {
         this.io = io;
     }
 
-    addPlayer(player, io){
+    addPlayer(player, io) {
         player.io = io;
-        player.stageBet = 10;
         player.chips = 1000;
         this.players.push(player);
     }
@@ -63,12 +62,12 @@ export default class Table {
         this.nextPlayer();
     }
 
-    synchronize(){
+    synchronize() {
         let data = Object.assign({}, this);
         delete data.deck;
         delete data.io;
         data.players = Object.assign([], data.players);
-        data.players.forEach(function(player) {
+        data.players.forEach(function (player) {
             player = Object.assign({}, player);
             delete player.io;
             delete player.cards;
@@ -76,7 +75,7 @@ export default class Table {
         this.io.emit("update", data);
     }
     requestAction() {
-        let player = this.players[this.currentPlayer];        
+        let player = this.players[this.currentPlayer];
         player.io.emit("your turn", {});
     }
 
@@ -91,8 +90,8 @@ export default class Table {
     }
 
     playerRaised(amount) {
-        let player = this.players[this.currentPlayer];        
-        if (player.stageRaised < amount && amount < player.chips) throw "need to raise at least as much as previous raise";
+        let player = this.players[this.currentPlayer];
+        if (player.stageRaised > amount && amount < player.chips) throw new Error("need to raise at least as much as previous raise");
 
         var diff = this.minBet - player.stageBet;
         this.playerBet(diff + amount);
@@ -105,7 +104,7 @@ export default class Table {
     }
 
     playerBet(amount) {
-        let player = this.players[this.currentPlayer];        
+        let player = this.players[this.currentPlayer];
         if (player.chips <= amount) {
             player.chips = 0;
             this.playersAllIned++;
@@ -129,13 +128,12 @@ export default class Table {
             this.nextStage();
             return;
         }
-        var next = -1;
+        var next = this.currentPlayer;
         while (true) {
-            next = (this.currentPlayer) % this.players.length;
-            if (this.players[next].isPlaying) break;
-            if (next == this.currentPlayer) break;
+            next = (next + 1) % this.players.length;
+            if (this.players[next].playing && !this.players[next].isFolded && !this.players[next].isAllIned) break;
+            if (next == this.currentPlayer) "something wrong with getting next player";
         }
-    //    if (next == this.currentPlayer) throw "something wrong with getting next player";
         this.currentPlayer = next;
         this.synchronize();
         this.requestAction(this.players[this.currentPlayer]);
