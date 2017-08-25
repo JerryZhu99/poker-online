@@ -10,7 +10,7 @@ describe("Texas Game", () => {
     it('should exist', () => {
         Table.should.exist;
     });
-    
+
     it('get winner', () => {
         var table = new Table();
         table.addPlayer({ id: "player0" });
@@ -87,12 +87,14 @@ describe("Texas Game", () => {
 
     it('should send the table state', () => {
         table.newRound();
+        table.currentRound.should.equal(0);
         io.messages[0].message.should.equal("update");
         io.messages[0].data.should.contain.all.keys(
             "currentPlayer", "currentRound", "currentStage", "minBet", "players", "playersAllIned", "playersChecked", "playersFolded", "playersPlaying", "pot", "table");
     });
     it('should not send sockets and player cards', () => {
         table.newRound();
+        table.currentRound.should.equal(1);
         io.messages[0].message.should.equal("update");
         io.messages[0].data.should.not.contain.keys("io", "deck");
         io.messages[0].data.players.should.not.include.any.keys("io", "cards");
@@ -147,6 +149,33 @@ describe("Texas Game", () => {
         table.currentStage.should.equal(2);
         table.table.length.should.equal(4);
     });
-
+    it('should allow the player 0 to check', () => {
+        table.currentPlayer.should.equal(0)
+        table.playerChecked();
+        table.players[0].chips.should.equal(800);
+    });
+    it('should allow the player 1 to check', () => {
+        table.currentPlayer.should.equal(1)
+        table.playerChecked();
+        table.players[1].chips.should.equal(800);
+    });
+    it('should move to next stage', () => {
+        table.currentStage.should.equal(3);
+        table.table.length.should.equal(5);
+    });
+    it('should allow the player 0 to check', () => {
+        table.currentPlayer.should.equal(0)
+        table.playerChecked();
+        table.players[0].chips.should.equal(800);
+    });
+    it('should allow the player 1 to fold', () => {
+        table.currentPlayer.should.equal(1)
+        table.playerFolded();
+    });
+    it('should end giving chips', () => {
+        table.currentRound.should.equal(2);
+        table.players[1].chips.should.equal(800);
+        table.players[0].chips.should.equal(1200);
+    });
 
 });

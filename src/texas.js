@@ -32,14 +32,16 @@ export default class Table {
     }
 
     endRound() {
-        var winningHands = getWinners();
+        var winningHands = this.getWinners();
         var winners = [];
         for (var i = 0; i < winningHands.length; i++) {
             winners.push(winningHands[i].player);
         }
         var winnersSet = new Set(winners);
         for (let winner of winnersSet) {
-            winner.chips += this.pot / winnersSet.length;
+            for(var i=0;i<this.players.length;i++)
+                if(this.players[i].id==winner.id)
+                    this.players[i].chips += Math.floor(this.pot / winnersSet.size);
         }
         this.newRound();
     }
@@ -141,7 +143,8 @@ export default class Table {
         this.pot += amount;
     }
 
-    playerFolded(player) {
+    playerFolded() {
+        let player = this.players[this.currentPlayer];
         player.playing = false;
         this.playersFolded++;
         this.nextPlayer();
