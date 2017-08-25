@@ -32,7 +32,7 @@ export class Table {
 
     endRound() {
         // decide winner
-        newRound();
+        this.newRound();
     }
 
     // pre flop, flop, river, or turn
@@ -67,7 +67,7 @@ export class Table {
 
     playerChecked(player) {
         var diff = this.minBet - player.stageBet;
-        playerBet(diff);
+        this.playerBet(diff);
 
         this.playersChecked++;
 
@@ -78,7 +78,7 @@ export class Table {
         if (player.stageRaised < amount && amount < player.chips) throw "need to raise at least as much as previous raise";
 
         var diff = this.minBet - player.stageBet;
-        playerBet(diff + amount);
+        this.playerBet(diff + amount);
         player.stageRaised = amount;
         this.minBet += amount;
 
@@ -108,7 +108,7 @@ export class Table {
 
     nextPlayer() {
         if (this.playersFolded + this.playersChecked + this.playersAllIned == this.playersPlaying) {
-            nextStage();
+            this.nextStage();
             return;
         }
         var next = -1;
