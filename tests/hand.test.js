@@ -39,7 +39,7 @@ describe("Hand", () => {
     var h4 = new Hand([new Card(4, 0), new Card(3, 3), new Card(7, 0), new Card(6, 0), new Card(5, 1)]);
     it('straight', () => {
         h4.rank.should.equal(4);
-        h4.major.should.deep.equal([7]);
+        h4.major.should.deep.equal([3]);
     });
 
     var h5 = new Hand([new Card(2, 0), new Card(7, 0), new Card(3, 0), new Card(4, 0), new Card(6, 0)]);
@@ -63,10 +63,10 @@ describe("Hand", () => {
     var h8 = new Hand([new Card(2, 3), new Card(5, 3), new Card(4, 3), new Card(3, 3), new Card(6, 3)]);
     it('straight flush', () => {
         h8.rank.should.equal(8);
-        h8.major.should.deep.equal([6]);
+        h8.major.should.deep.equal([2]);
     });
 
-    var h9 = new Hand([new Card(12, 3), new Card(11, 3), new Card(9, 3), new Card(10, 3), new Card(8, 3)]);
+    var h9 = new Hand([new Card(12, 3), new Card(11, 3), new Card(9, 3), new Card(10, 3), new Card(0, 3)]);
     it('royal flush', () => {
         h9.rank.should.equal(9);
         h9.major.should.deep.equal([]);
