@@ -1,11 +1,7 @@
 import chai from 'chai';
-import {
-    Card,
-    Deck,
-    Hand,
-    compareHands,
-    maxHands
-} from "card";
+import Card from "card";
+import Deck from "deck";
+import Hand from "hand";
 chai.should();
 describe("Hand", () => {
     it('should exist', () => {
@@ -73,55 +69,55 @@ describe("Hand", () => {
     });
 
     it('compare hands', () => {
-        compareHands(h, h1).should.equal(-1);
-        compareHands(h2, h3).should.equal(-1);
-        compareHands(h3, h7).should.equal(-1);
-        compareHands(h5, h7).should.equal(-1);
-        compareHands(h8, h9).should.equal(-1);
+        Hand.compare(h, h1).should.equal(-1);
+        Hand.compare(h2, h3).should.equal(-1);
+        Hand.compare(h3, h7).should.equal(-1);
+        Hand.compare(h5, h7).should.equal(-1);
+        Hand.compare(h8, h9).should.equal(-1);
 
-        compareHands(h3, h1).should.equal(1);
-        compareHands(h4, h3).should.equal(1);
-        compareHands(h8, h7).should.equal(1);
-        compareHands(h8, h7).should.equal(1);
+        Hand.compare(h3, h1).should.equal(1);
+        Hand.compare(h4, h3).should.equal(1);
+        Hand.compare(h8, h7).should.equal(1);
+        Hand.compare(h8, h7).should.equal(1);
 
-        compareHands(h2, h2).should.equal(0);
-        compareHands(h8, h8).should.equal(0);
+        Hand.compare(h2, h2).should.equal(0);
+        Hand.compare(h8, h8).should.equal(0);
     });
 
     it('max hands', () => {
-        maxHands([h, h1]).should.deep.equal([h1]);
-        maxHands([h1, h2, h2, h3, h5, h7]).should.deep.equal([h7]);
-        maxHands([h, h1, h, h1]).should.deep.equal([h1, h1]);
-        maxHands([h9, h8, h7, h7, h9]).should.deep.equal([h9, h9]);
-        maxHands([h]).should.deep.equal([h]);
+        Hand.max([h, h1]).should.deep.equal([h1]);
+        Hand.max([h1, h2, h2, h3, h5, h7]).should.deep.equal([h7]);
+        Hand.max([h, h1, h, h1]).should.deep.equal([h1, h1]);
+        Hand.max([h9, h8, h7, h7, h9]).should.deep.equal([h9, h9]);
+        Hand.max([h]).should.deep.equal([h]);
     });
 
     it('compare more hands', () => {
-        compareHands(
+        Hand.compare(
             new Hand([new Card(12, 3), new Card(11, 3), new Card(9, 3), new Card(10, 3), new Card(8, 3)]),
             new Hand([new Card(12, 2), new Card(11, 2), new Card(9, 2), new Card(10, 2), new Card(8, 2)])).should.equal(0);
 
-        compareHands(
+        Hand.compare(
             new Hand([new Card(1, 3), new Card(3, 3), new Card(5, 3), new Card(2, 3), new Card(4, 3)]),
             new Hand([new Card(3, 2), new Card(1, 2), new Card(2, 2), new Card(4, 2), new Card(5, 2)])).should.equal(0);
 
-        compareHands(
+        Hand.compare(
             new Hand([new Card(3, 0), new Card(3, 3), new Card(3, 3), new Card(2, 0), new Card(2, 3)]),
             new Hand([new Card(3, 0), new Card(2, 2), new Card(2, 2), new Card(2, 0), new Card(0, 2)])).should.equal(1);
 
-        compareHands(
+        Hand.compare(
             new Hand([new Card(3, 0), new Card(3, 3), new Card(3, 3), new Card(2, 0), new Card(1, 3)]),
             new Hand([new Card(3, 0), new Card(3, 2), new Card(2, 2), new Card(3, 0), new Card(0, 2)])).should.equal(1);
 
-        compareHands(
+        Hand.compare(
             new Hand([new Card(5, 0), new Card(5, 3), new Card(2, 3), new Card(2, 0), new Card(1, 3)]),
             new Hand([new Card(4, 0), new Card(4, 2), new Card(3, 2), new Card(3, 0), new Card(1, 2)])).should.equal(1);
 
-        compareHands(
+        Hand.compare(
             new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]),
             new Hand([new Card(3, 0), new Card(4, 2), new Card(5, 2), new Card(6, 0), new Card(2, 2)])).should.equal(1);
 
-        compareHands(
+        Hand.compare(
             new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]),
             new Hand([new Card(3, 2), new Card(4, 2), new Card(5, 2), new Card(6, 2), new Card(2, 2)])).should.equal(-1);
     });

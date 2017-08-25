@@ -1,18 +1,20 @@
-import {
-    Card,
-    Deck,
-    Hand,
-    compareHands,
-    maxHands
-} from "card";
+import Card from "card";
+import Deck from "deck";
+import Hand from "hand";
 
-export class Table {
-    constructor() {
+export default class Table {
+    constructor(io) {
         this.players = [];
         this.currentRound = -1;
-        this.newRound();
+        this.io = io;
     }
 
+    addPlayer(player, io){
+        player.io = io;
+        player.stageBet = 10;
+        player.chips = 1000;
+        this.players.push(player);
+    }
     // winner is decided
     newRound() {
         this.playersPlaying = this.players.length;
@@ -24,8 +26,8 @@ export class Table {
         this.playersAllIned = 0;
         this.deck = new Deck();
         for (var i = 0; i < this.players.length; i++) {
-            players[i].cards = [this.deck.draw(), this.deck.draw()];
-            players[i].playing = true;
+            this.players[i].cards = [this.deck.draw(), this.deck.draw()];
+            this.players[i].playing = true;
         }
         this.nextStage();
     }
@@ -52,20 +54,34 @@ export class Table {
         }
 
         this.minBet = 1;
-        this.currentPlayer = this.currentRound - 1;
+        this.currentPlayer = this.currentRound % this.players.length;
         this.playersChecked = 0;
         for (var i = 0; i < this.players.length; i++) {
-            players[i].stageBet = 0;
-            players[i].stageRaised = 0;
+            this.players[i].stageBet = 0;
+            this.players[i].stageRaised = 0;
         }
         this.nextPlayer();
     }
 
-    requestAction(player) {
-
+    synchronize(){
+        let data = Object.assign({}, this);
+        delete data.deck;
+        delete data.io;
+        data.players = Object.assign([], data.players);
+        data.players.forEach(function(player) {
+            player = Object.assign({}, player);
+            delete player.io;
+            delete player.cards;
+        });
+        this.io.emit("update", data);
+    }
+    requestAction() {
+        let player = this.players[this.currentPlayer];        
+        player.io.emit("your turn", {});
     }
 
-    playerChecked(player) {
+    playerChecked() {
+        let player = this.players[this.currentPlayer];
         var diff = this.minBet - player.stageBet;
         this.playerBet(diff);
 
@@ -74,7 +90,8 @@ export class Table {
         this.nextPlayer();
     }
 
-    playerRaised(player, amount) {
+    playerRaised(amount) {
+        let player = this.players[this.currentPlayer];        
         if (player.stageRaised < amount && amount < player.chips) throw "need to raise at least as much as previous raise";
 
         var diff = this.minBet - player.stageBet;
@@ -87,7 +104,8 @@ export class Table {
         this.nextPlayer();
     }
 
-    playerBet(player, amount) {
+    playerBet(amount) {
+        let player = this.players[this.currentPlayer];        
         if (player.chips <= amount) {
             player.chips = 0;
             this.playersAllIned++;
@@ -113,12 +131,13 @@ export class Table {
         }
         var next = -1;
         while (true) {
-            next = (this.currentPlayer + 1) % this.players.length;
+            next = (this.currentPlayer) % this.players.length;
             if (this.players[next].isPlaying) break;
             if (next == this.currentPlayer) break;
         }
-        if (next == this.currentPlayer) throw "something wrong with getting next player";
+    //    if (next == this.currentPlayer) throw "something wrong with getting next player";
         this.currentPlayer = next;
+        this.synchronize();
         this.requestAction(this.players[this.currentPlayer]);
     }
 }

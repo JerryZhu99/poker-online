@@ -1,8 +1,6 @@
 import chai from 'chai';
-import {
-    Card,
-    Deck
-} from "card";
+import Card from "card";
+import Deck from "deck";
 chai.should();
 describe("Cards", () => {
     it('should exist', () => {
