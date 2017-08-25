@@ -122,9 +122,20 @@ describe("Hand", () => {
             new Hand([new Card(3, 2), new Card(4, 2), new Card(5, 2), new Card(6, 2), new Card(2, 2)])).should.equal(-1);
     });
     it('get hands', () => {
-       var hands=  Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]);
-       hands.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
+        var hands = Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]);
+        hands.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
 
-       
+        var hands1 = Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3), new Card(9, 2)]);
+        hands1.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
+        hands1.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(9, 2)]));
+        hands1.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(9, 2), new Card(8, 3)]));
+        hands1.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(9, 2), new Card(2, 3), new Card(8, 3)]));
+        hands1.should.deep.include(new Hand([new Card(1, 3), new Card(9, 2), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
+        hands1.should.deep.include(new Hand([new Card(9, 2), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
+        hands1.length.should.equal(6);
+
+
+        var hands1 = Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3), new Card(9, 2), new Card(0, 0)]);
+        hands1.length.should.equal(21);
     });
 });
