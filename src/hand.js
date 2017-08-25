@@ -162,5 +162,23 @@ export default class Hand {
         }
         return ans;
     }
-} 
+    static getHands(cards) {
+        var hands = [];
+        var v = (1 << 5) - 1;
+        for (var i = 0; ; i++) {
+            var hand = [];
+            for (var j = 0; j < cards.length; j++) {
+                if ((v & (1 << j)) != 0) {
+                    hand.push(cards[j]);
+                }
+            }
+            if (hand.length < 5) break;
+            hands.push(new Hand(hand));
+            var t = (v | (v - 1)) + 1;
+            var w = t | ((((t & -t) / (v & -v)) >> 1) - 1);
+            v = w;
+        }
+        return hands;
+    }
+}
 

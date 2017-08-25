@@ -90,8 +90,13 @@ describe("Texas Game", () => {
         table.playerRaised(100);
         table.players[0].chips.should.equal(799);
     });
-    it('should not allow the next player to raise less', () => {
+    it('should allow the next player to check', () => {
+        table.currentStage.should.equal(0);
         table.currentPlayer.should.equal(1)
-        table.playerRaised(50).should.throw(new Error("need to raise at least as much as previous raise"));
+        table.playerChecked();
+        table.players[1].chips.should.equal(799);
+    });
+    it('should move to next stage', () => {
+        table.currentStage.should.equal(1);
     });
 });

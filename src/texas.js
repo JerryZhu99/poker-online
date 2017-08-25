@@ -36,6 +36,11 @@ export default class Table {
         this.newRound();
     }
 
+    getWinners() {
+        if (this.table.length != 5) throw "attempted to get winner without full table";
+        
+    }
+
     // pre flop, flop, river, or turn
     nextStage() {
         this.currentStage++;
@@ -91,7 +96,7 @@ export default class Table {
 
     playerRaised(amount) {
         let player = this.players[this.currentPlayer];
-        if (player.stageRaised > amount && amount < player.chips) throw new Error("need to raise at least as much as previous raise");
+        if (player.stageRaised > 0) throw new Error("already raised");
 
         var diff = this.minBet - player.stageBet;
         this.playerBet(diff + amount);
@@ -128,11 +133,15 @@ export default class Table {
             this.nextStage();
             return;
         }
+        if (this.playersFolded == this.playersPlaying) {
+            this.endRound();
+            return;
+        }
         var next = this.currentPlayer;
         while (true) {
             next = (next + 1) % this.players.length;
             if (this.players[next].playing && !this.players[next].isFolded && !this.players[next].isAllIned) break;
-            if (next == this.currentPlayer) "something wrong with getting next player";
+            if (next == this.currentPlayer) throw "something wrong with getting next player";
         }
         this.currentPlayer = next;
         this.synchronize();

@@ -121,4 +121,10 @@ describe("Hand", () => {
             new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]),
             new Hand([new Card(3, 2), new Card(4, 2), new Card(5, 2), new Card(6, 2), new Card(2, 2)])).should.equal(-1);
     });
+    it('get hands', () => {
+       var hands=  Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]);
+       hands.should.deep.include(new Hand([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
+
+       
+    });
 });
