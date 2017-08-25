@@ -26,9 +26,8 @@ export default class Hand {
     }
 
     calcRoyalFlush() {
-        for (var i = 1; i < 5; i++)
+        for (var i = 0; i < 5; i++)
             if (this.cardsSorted[i].value != i + 8) return false;
-        if (this.cardsSorted[0].value != 0) return false
         for (var i = 1; i < 5; i++)
             if (this.cardsSorted[i].suit != this.cardsSorted[i - 1].suit) return false;
         this.major = [];
@@ -83,23 +82,12 @@ export default class Hand {
             this.major = [this.cardsSorted[0].value];
             return true;
         }
-        if (this._calcAceStraight()) {
-            this.major = [this.cardsSorted[4].value];
-            return true;
-        }
         return false;
     }
 
     _calcStraight() {
         for (var i = 1; i < 5; i++)
             if (this.cardsSorted[i].value != this.cardsSorted[i - 1].value + 1) return false;
-        return true;
-    }
-
-    _calcAceStraight() {
-        for (var i = 1; i < 5; i++)
-            if (this.cardsSorted[i].value != i + 8) return false;
-        if (this.cardsSorted[0].value != 0) return false;
         return true;
     }
 

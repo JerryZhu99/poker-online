@@ -62,7 +62,7 @@ describe("Hand", () => {
         h8.major.should.deep.equal([2]);
     });
 
-    var h9 = new Hand([new Card(12, 3), new Card(11, 3), new Card(9, 3), new Card(10, 3), new Card(0, 3)]);
+    var h9 = new Hand([new Card(12, 3), new Card(11, 3), new Card(9, 3), new Card(10, 3), new Card(8, 3)]);
     it('royal flush', () => {
         h9.rank.should.equal(9);
         h9.major.should.deep.equal([]);
@@ -134,8 +134,7 @@ describe("Hand", () => {
         hands1.should.deep.include(new Hand([new Card(9, 2), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3)]));
         hands1.length.should.equal(6);
 
-
-        var hands1 = Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3), new Card(9, 2), new Card(0, 0)]);
-        hands1.length.should.equal(21);
+        var hands2 = Hand.getHands([new Card(1, 3), new Card(3, 3), new Card(4, 3), new Card(2, 3), new Card(8, 3), new Card(9, 2), new Card(0, 0)]);
+        hands2.length.should.equal(21);
     });
 });

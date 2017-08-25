@@ -38,7 +38,16 @@ export default class Table {
 
     getWinners() {
         if (this.table.length != 5) throw "attempted to get winner without full table";
-        
+        var hands = [];
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].playing && !this.players[i].isFolded) {
+                var playerHands = Hand.getHands(this.table.concat(this.players[i].cards));
+                for (var j = 0; j < playerHands.length; j++) {
+                    hands.push(playerHands[j]);
+                }
+            }
+        }
+        return Hand.max(hands);
     }
 
     // pre flop, flop, river, or turn
@@ -57,7 +66,7 @@ export default class Table {
             this.endRound();
         }
 
-        this.minBet = 1;
+        this.minBet = 0;
         this.currentPlayer = this.currentRound % this.players.length;
         this.playersChecked = 0;
         for (var i = 0; i < this.players.length; i++) {
