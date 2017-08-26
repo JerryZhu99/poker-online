@@ -5,7 +5,7 @@ const http = httpModule.Server(app);
 import socketIO from 'socket.io';
 const io = socketIO(http);
 
-import {Deck} from 'card.js';
+import Deck from 'deck';
 
 app.use(express.static('dist'));
 
