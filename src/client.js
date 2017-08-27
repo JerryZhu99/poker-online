@@ -4,12 +4,13 @@ import "assets/felt.png";
 import io from "socket.io-client";
 import Vue from "vue";
 import Table from "texas";
+import Card from "card";
 
 export const socket = io();
 export const table = new Table();
 table.requestAction = function(){};
 
-table.players.push({id:socket.id});
+table.addPlayer(socket);
 table.check = function(){
     socket.emit("check");
 }
@@ -33,6 +34,14 @@ export const view = new Vue({
 document.getElementById("check").addEventListener("click", table.check);
 document.getElementById("raise").addEventListener("click", table.raise);
 document.getElementById("fold").addEventListener("click", table.fold);
+
+socket.on("cards", function(data){
+    socket.cards = [];
+    data.forEach(function(card) {
+        socket.cards.push(new Card(card.value, card.suit));
+    }, this);
+    console.log(data);
+});
 
 socket.on("update", function (data) {
     console.log(data);

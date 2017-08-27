@@ -12,7 +12,7 @@ describe("Texas Game", () => {
     });
 
     it('get winner', () => {
-        var table = new Table();
+        let table = new Table();
         table.addPlayer({ id: "player0" });
         table.addPlayer({ id: "player1" });
         table.addPlayer({ id: "player2" });
@@ -44,79 +44,20 @@ describe("Texas Game", () => {
         w[0].player.id.should.equal("player2");
     });
 
-    let io = {
-        messages: [],
-        emit: function (message, data) {
-            this.messages.push({
-                message: message,
-                data: data
-            });
-        }
-    };
-    let socket = {
-        messages: [],
-        emit: function (message, data) {
-            this.messages.push({
-                message: message,
-                data: data
-            });
-        }
-    };
-    let socket2 = {
-        messages: [],
-        emit: function (message, data) {
-            this.messages.push({
-                message: message,
-                data: data
-            });
-        }
-    };
-    let player = {
-        id: "test1"
-    };
-    let player2 = {
-        id: "test2"
-    };
-    let table;
-
-    it('should add a player', () => {
-        table = new Table(io);
-        table.addPlayer(player, socket);
-        table.addPlayer(player2, socket2);
-    });
-
-    it('should send the table state', () => {
+    let table = new Table();
+    it('should start a new round', () => {
+        table.addPlayer({ id: "player0" });
+        table.addPlayer({ id: "player1" });
         table.newRound();
         table.currentRound.should.equal(0);
-        io.messages[0].message.should.equal("update");
-        io.messages[0].data.should.contain.all.keys(
-            "currentPlayer", "currentRound", "currentStage", "minBet", "players", "playersAllIned", "playersChecked", "playersFolded", "playersPlaying", "pot", "table");
-    });
-    it('should not send sockets and player cards', () => {
-        table.newRound();
-        table.currentRound.should.equal(1);
-        io.messages[0].message.should.equal("update");
-        io.messages[0].data.should.not.contain.keys("io", "deck");
-        io.messages[0].data.players.should.not.include.any.keys("io", "cards");
-    });
-    it('should wait for the current player', () => {
-        socket.messages.should.deep.contain({
-            message: "your turn",
-            data: {}
-        });
     });
     it('should allow the current player to check', () => {
+        table.currentPlayer.should.equal(0);        
         table.playerChecked();
-        table.currentPlayer.should.equal(1)
-    });
-    it('should wait for the next player', () => {
-        socket2.messages.should.deep.contain({
-            message: "your turn",
-            data: {}
-        });
+        table.currentPlayer.should.equal(1);
     });
     it('should allow the next player to raise', () => {
-        table.currentPlayer.should.equal(1)
+        table.currentPlayer.should.equal(1);
         table.playerRaised(100);
         table.players[1].chips.should.equal(900);
     });
@@ -173,7 +114,7 @@ describe("Texas Game", () => {
         table.playerFolded();
     });
     it('should end giving chips', () => {
-        table.currentRound.should.equal(2);
+        table.currentRound.should.equal(1);
         table.players[1].chips.should.equal(800);
         table.players[0].chips.should.equal(1200);
     });

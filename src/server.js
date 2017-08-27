@@ -13,10 +13,21 @@ app.use(express.static('dist'));
 export var users = 0;
 
 export var table = new Table();
+table.onStart = function(){
+    this.players.forEach(function(player) {
+        player.emit("cards", player.cards);
+    }, this);
+    io.emit("update", table.synchronize());    
+}
+table.onEnd = function(){
+    setTimeout(function(){
+        table.newRound();
+    }, 5000)
+}
 table.newRound();
 io.on('connection', function(socket){
     users++;
-    table.players.push(socket);
+    table.addPlayer(socket);
     table.newRound();
     io.emit("update", table.synchronize());
     
@@ -39,13 +50,13 @@ io.on('connection', function(socket){
     })
     socket.on('fold', function(){
         if(table.isCurrentPlayer(socket)){
-            table.playerFolded(amount);
+            table.playerFolded();
             io.emit("update", table.synchronize());
         }
     })
     socket.on('disconnect', function(){
         users--;
-        table.players.splice(table.players.indexOf(socket), 1)
+        table.removePlayer(socket);
         io.emit('message', "User disconnected: "+users+" users online");        
     });
 });

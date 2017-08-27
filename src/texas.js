@@ -7,6 +7,13 @@ export default class Table {
         this.players = [];
         this.currentRound = -1;
     }
+    addPlayer(player){
+        this.players.push(player);
+        player.chips = 1000;
+    }
+    removePlayer(player){
+        this.players.splice(this.players.indexOf(player), 1);        
+    }
     // winner is decided
     newRound() {
         this.playersPlaying = this.players.length;
@@ -21,6 +28,7 @@ export default class Table {
             this.players[i].cards = [this.deck.draw(), this.deck.draw()];
             this.players[i].playing = true;
         }
+        if(this.onStart)this.onStart();
         this.nextStage();
     }
 
@@ -36,7 +44,7 @@ export default class Table {
                 if(this.players[i].id==winner.id)
                     this.players[i].chips += Math.floor(this.pot / winnersSet.size);
         }
-        this.newRound();
+        if(this.onEnd)this.onEnd();
     }
 
     getWinners() {
@@ -78,7 +86,7 @@ export default class Table {
             this.players[i].stageBet = 0;
             this.players[i].stageRaised = 0;
         }
-        this.nextPlayer();
+        //this.nextPlayer();
     }
 
     synchronize(state) {
@@ -86,11 +94,12 @@ export default class Table {
             this.playersPlaying = state.playersPlaying;
             this.currentRound = state.currentRound;
             this.pot = state.pot;
+            let table = [];
             for(let i=0;i<state.table.length;i++){
                 let card = state.table[i];
-                state.table[i] = new Card(card.value, card.suit);
+                table[i] = new Card(card.value, card.suit);
             }
-            this.table = state.table;
+            this.table = table;
 
             this.currentStage = state.currentStage;
             this.playersFolded = state.playersFolded;
@@ -119,7 +128,7 @@ export default class Table {
     }
 
     playerChecked() {
-        let player = this.players[this.currentPlayer];
+        let player = this.getCurrentPlayer();
         var diff = this.minBet - player.stageBet;
         this.playerBet(diff);
 
@@ -129,7 +138,7 @@ export default class Table {
     }
 
     playerRaised(amount) {
-        let player = this.players[this.currentPlayer];
+        let player = this.getCurrentPlayer();
         if (player.stageRaised > 0) throw new Error("already raised");
 
         var diff = this.minBet - player.stageBet;
@@ -143,7 +152,7 @@ export default class Table {
     }
 
     playerBet(amount) {
-        let player = this.players[this.currentPlayer];
+        let player = this.getCurrentPlayer();
         if (player.chips <= amount) {
             player.chips = 0;
             this.playersAllIned++;
@@ -169,7 +178,7 @@ export default class Table {
             this.nextStage();
             return;
         }
-        if (this.playersFolded == this.playersPlaying) {
+        if (this.playersFolded == this.playersPlaying - 1) {
             this.endRound();
             return;
         }
