@@ -55,36 +55,7 @@ body{
     display: flex;
 
 }
-.card{
-    font-family: 'Oswald', sans-serif;
-    padding: 10px;
-    margin: 10px;
-    height: 161.8px;
-    width: 100px;
-    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.25);
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-.card-top{
-    align-self: flex-start;
-}
-.card-center{
-    height: 60px;
-    font-size: 50px;
-    line-height: 60px;
-    vertical-align: middle;
-    align-self: center;
-}
-.card-bottom{
-    align-self: flex-end;
-    transform: rotate(180deg)
-}
-.red{
-    color: red;
-}
+
 #actions{
     display: flex;
     flex-direction: column;

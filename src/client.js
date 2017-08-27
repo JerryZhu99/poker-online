@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import Vue from "vue";
 import Table from "texas";
 import Card from "card";
+import CardComponent from "card.vue";
 
 export const socket = io();
 export const table = new Table();
@@ -21,6 +22,7 @@ table.fold = function(){
     socket.emit("fold");
 }
 table.newRound();
+Vue.component("card", CardComponent)
 export const view = new Vue({
     el: '#wrapper',
     data: {

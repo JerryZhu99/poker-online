@@ -13,53 +13,17 @@
     <div id="wrapper">
         <div id="opponents">
             <div class="card-container" v-for="opponent in table.players">
-                <div class="card" v-for="card in opponent.cards" v-bind:class="{ red: (card.suit == 0 || card.suit == 2)}">
-                    <div class="card-top">
-                        {{card.valuestr}}
-                        <br> {{card.suitstr}}
-                    </div>
-                    <div class="card-center">
-                        {{card.suitstr}}
-                    </div>
-                    <div class="card-bottom">
-                        {{card.valuestr}}
-                        <br> {{card.suitstr}}
-                    </div>
-                </div>
+                <card :card="card" v-for="card in opponent.cards">
             </div>
         </div>
         <div id="table">
             <div class="card-container">
-                <div class="card" v-for="card in table.table" v-bind:class="{ red: (card.suit == 0 || card.suit == 2)}">
-                    <div class="card-top">
-                        {{card.valuestr}}
-                        <br> {{card.suitstr}}
-                    </div>
-                    <div class="card-center">
-                        {{card.suitstr}}
-                    </div>
-                    <div class="card-bottom">
-                        {{card.valuestr}}
-                        <br> {{card.suitstr}}
-                    </div>
-                </div>
+                <card :card="card" v-for="card in table.table"></card>
             </div>
         </div>
         <div id="player">
             <div class="card-container">
-                <div class="card" v-for="card in table.players[0].cards" v-bind:class="{ red: (card.suit == 0 || card.suit == 2)}">
-                    <div class="card-top">
-                        {{card.valuestr}}
-                        <br> {{card.suitstr}}
-                    </div>
-                    <div class="card-center">
-                        {{card.suitstr}}
-                    </div>
-                    <div class="card-bottom">
-                        {{card.valuestr}}
-                        <br> {{card.suitstr}}
-                    </div>
-                </div>
+                <card :card="card" v-for="card in table.players[0].cards"></card>
             </div>
             <div id="actions">
                 <input id="check" type="button" value="Check">
