@@ -3,16 +3,9 @@ import Deck from "deck";
 import Hand from "hand";
 
 export default class Table {
-    constructor(io) {
+    constructor() {
         this.players = [];
         this.currentRound = -1;
-        this.io = io;
-    }
-
-    addPlayer(player, io) {
-        player.io = io;
-        player.chips = 1000;
-        this.players.push(player);
     }
     // winner is decided
     newRound() {
@@ -88,21 +81,41 @@ export default class Table {
         this.nextPlayer();
     }
 
-    synchronize() {
-        let data = Object.assign({}, this);
-        delete data.deck;
-        delete data.io;
-        data.players = Object.assign([], data.players);
-        data.players.forEach(function (player) {
-            player = Object.assign({}, player);
-            delete player.io;
-            delete player.cards;
+    synchronize(state) {
+        if(state){
+            this.playersPlaying = state.playersPlaying;
+            this.currentRound = state.currentRound;
+            this.pot = state.pot;
+            for(let i=0;i<state.table.length;i++){
+                let card = state.table[i];
+                state.table[i] = new Card(card.value, card.suit);
+            }
+            this.table = state.table;
+
+            this.currentStage = state.currentStage;
+            this.playersFolded = state.playersFolded;
+            this.playersAllIned = state.playersAllIned;
+            return;
+        }
+        let data = {};
+        data.playersPlaying = this.playersPlaying;
+        data.currentRound = this.currentRound;
+        data.pot = this.pot;
+        data.table = this.table;
+        data.currentStage = this.currentStage;
+        data.playersFolded = this.playersFolded;
+        data.playersAllIned = this.playersAllIned;
+        data.players = [];
+        this.players.forEach(function (player) {
+           data.players.push({
+               id:player.id,
+               playing: player.playing,
+               chips: player.chips,
+               stageBet: player.stageBet,
+               stageRaise: player.stageRaised,
+            });
         });
-        this.io.emit("update", data);
-    }
-    requestAction() {
-        let player = this.players[this.currentPlayer];
-        player.io.emit("your turn", {});
+        return data;
     }
 
     playerChecked() {
@@ -151,6 +164,7 @@ export default class Table {
     }
 
     nextPlayer() {
+        if(this.players.length == 0) return;                
         if (this.playersFolded + this.playersChecked + this.playersAllIned == this.playersPlaying) {
             this.nextStage();
             return;
@@ -166,7 +180,12 @@ export default class Table {
             if (next == this.currentPlayer) throw "something wrong with getting next player";
         }
         this.currentPlayer = next;
-        this.synchronize();
-        this.requestAction(this.players[this.currentPlayer]);
+    }
+    
+    getCurrentPlayer(){
+        return this.players[this.currentPlayer];
+    }
+    isCurrentPlayer(player){
+        return this.getCurrentPlayer().id == player.id
     }
 }
