@@ -1,6 +1,6 @@
 <template>
     <div class="card" v-bind:class="{ red: (card.suit == 0 || card.suit == 2)}">
-        <div class="card-front" v-if="card">
+        <div class="card-front" v-if="card.value >= 0">
             <div class="card-top">
                 {{card.valuestr}}
                 <br> {{card.suitstr}}

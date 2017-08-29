@@ -9,8 +9,6 @@ import CardComponent from "card.vue";
 
 export const socket = io();
 export const table = new Table();
-table.requestAction = function(){};
-
 table.addPlayer(socket);
 table.check = function(){
     socket.emit("check");
@@ -28,7 +26,12 @@ export const view = new Vue({
     data: {
         messages: ["Start of messages"],
         newMessage: "",
-        table: table
+        table: table,
+    },
+    computed: {
+        player: function(){
+            return this.table.players.find((p) => (p.id == socket.id))
+        }
     }
 });
 
@@ -37,19 +40,25 @@ document.getElementById("check").addEventListener("click", table.check);
 document.getElementById("raise").addEventListener("click", table.raise);
 document.getElementById("fold").addEventListener("click", table.fold);
 
+
 socket.on("cards", function(data){
-    socket.cards = [];
+    view.player.cards = [];    
     data.forEach(function(card) {
-        socket.cards.push(new Card(card.value, card.suit));
+        view.player.cards.push(new Card(card.value, card.suit));
     }, this);
     console.log(data);
 });
 
 socket.on("update", function (data) {
     console.log(data);
+    let cards = view.player.cards;
     view.table.synchronize(data);
-})
-
+    view.player.cards = cards;
+});
+socket.on("result", function (data) {
+    view.table.synchronize(data);    
+});
+    
 
 function send(event) {
     socket.emit("message", view.newMessage);

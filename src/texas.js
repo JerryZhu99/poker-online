@@ -7,12 +7,12 @@ export default class Table {
         this.players = [];
         this.currentRound = -1;
     }
-    addPlayer(player){
+    addPlayer(player) {
         this.players.push(player);
         player.chips = 1000;
     }
-    removePlayer(player){
-        this.players.splice(this.players.indexOf(player), 1);        
+    removePlayer(player) {
+        this.players.splice(this.players.indexOf(player), 1);
     }
     // winner is decided
     newRound() {
@@ -28,26 +28,34 @@ export default class Table {
             this.players[i].cards = [this.deck.draw(), this.deck.draw()];
             this.players[i].playing = true;
         }
-        if(this.onStart)this.onStart();
+        if (this.onStart) this.onStart();
         this.nextStage();
     }
 
     endRound() {
-        var winningHands = this.getWinners();
-        var winners = [];
+ 
+        let winningHands = [];
+        let winners = [];
+
+        if (this.playersFolded == this.playersPlaying - 1){
+            winners = [(this.getCurrentPlayer()+1)%this.players.length];
+        }else{
+            winningHands = this.getWinners();
+        }
         for (var i = 0; i < winningHands.length; i++) {
             winners.push(winningHands[i].player);
         }
-        var winnersSet = new Set(winners);
+        let winnersSet = new Set(winners);
         for (let winner of winnersSet) {
-            for(var i=0;i<this.players.length;i++)
-                if(this.players[i].id==winner.id)
+            for (var i = 0; i < this.players.length; i++)
+                if (this.players[i].id == winner.id)
                     this.players[i].chips += Math.floor(this.pot / winnersSet.size);
         }
-        if(this.onEnd)this.onEnd();
+        if (this.onEnd) this.onEnd();
     }
 
     getWinners() {
+ 
         if (this.table.length != 5) throw "attempted to get winner without full table";
         var hands = [];
         for (var i = 0; i < this.players.length; i++) {
@@ -90,20 +98,28 @@ export default class Table {
     }
 
     synchronize(state) {
-        if(state){
+        if (state) {
             this.playersPlaying = state.playersPlaying;
             this.currentRound = state.currentRound;
             this.pot = state.pot;
             let table = [];
-            for(let i=0;i<state.table.length;i++){
+            for (let i = 0; i < state.table.length; i++) {
                 let card = state.table[i];
                 table[i] = new Card(card.value, card.suit);
             }
             this.table = table;
-
             this.currentStage = state.currentStage;
             this.playersFolded = state.playersFolded;
             this.playersAllIned = state.playersAllIned;
+            for (let i = 0; i < state.players.length; i++) {
+                let player = state.players[i];
+                for (let j = 0; j < player.cards.length; j++) {
+                    let card = player.cards[j];
+                    player.cards[j] = new Card(card.value, card.suit);
+                }
+                state.players[i] = player;
+            }
+            this.players = state.players;
             return;
         }
         let data = {};
@@ -116,14 +132,20 @@ export default class Table {
         data.playersAllIned = this.playersAllIned;
         data.players = [];
         this.players.forEach(function (player) {
-           data.players.push({
-               id:player.id,
-               playing: player.playing,
-               chips: player.chips,
-               stageBet: player.stageBet,
-               stageRaise: player.stageRaised,
-            });
-        });
+            var p = {
+                id: player.id,
+                playing: player.playing,
+                chips: player.chips,
+                stageBet: player.stageBet,
+                stageRaise: player.stageRaised,
+            };
+            if (this.currentStage == 4) { // check if reveal
+                p.cards = player.cards;
+            } else {
+                p.cards = [new Card(-1, -1), new Card(-1, -1)];
+            }
+            data.players.push(p);
+        }, this);
         return data;
     }
 
@@ -173,7 +195,7 @@ export default class Table {
     }
 
     nextPlayer() {
-        if(this.players.length == 0) return;                
+        if (this.players.length == 0) return;
         if (this.playersFolded + this.playersChecked + this.playersAllIned == this.playersPlaying) {
             this.nextStage();
             return;
@@ -190,11 +212,11 @@ export default class Table {
         }
         this.currentPlayer = next;
     }
-    
-    getCurrentPlayer(){
+
+    getCurrentPlayer() {
         return this.players[this.currentPlayer];
     }
-    isCurrentPlayer(player){
+    isCurrentPlayer(player) {
         return this.getCurrentPlayer().id == player.id
     }
 }

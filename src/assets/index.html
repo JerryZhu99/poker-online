@@ -12,7 +12,7 @@
 <body>
     <div id="wrapper">
         <div id="opponents">
-            <div class="card-container" v-for="opponent in table.players">
+            <div class="card-container" v-for="opponent in table.players" v-if="opponent.id != player.id">
                 <card :card="card" v-for="card in opponent.cards">
             </div>
         </div>
@@ -23,7 +23,7 @@
         </div>
         <div id="player">
             <div class="card-container">
-                <card :card="card" v-for="card in table.players[0].cards"></card>
+                <card :card="card" v-for="card in player.cards"></card>
             </div>
             <div id="actions">
                 <input id="check" type="button" value="Check">

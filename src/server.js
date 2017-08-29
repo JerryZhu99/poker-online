@@ -14,12 +14,13 @@ export var users = 0;
 
 export var table = new Table();
 table.onStart = function(){
+    io.emit("update", table.synchronize());        
     this.players.forEach(function(player) {
         player.emit("cards", player.cards);
     }, this);
-    io.emit("update", table.synchronize());    
 }
 table.onEnd = function(){
+    io.emit("result", table.synchronize());            
     setTimeout(function(){
         table.newRound();
     }, 5000)
@@ -39,18 +40,21 @@ io.on('connection', function(socket){
     socket.on('check', function(){
         if(table.isCurrentPlayer(socket)){
             table.playerChecked();
+            io.emit("message", `${socket.id} checked`)
             io.emit("update", table.synchronize());
         }
     })
     socket.on('raise', function(amount){
         if(table.isCurrentPlayer(socket)){
             table.playerRaised(amount);
+            io.emit("message", `${socket.id} raised by ${amount}`)            
             io.emit("update", table.synchronize());
         }
     })
     socket.on('fold', function(){
         if(table.isCurrentPlayer(socket)){
             table.playerFolded();
+            io.emit("message", `${socket.id} folded`)            
             io.emit("update", table.synchronize());
         }
     })
