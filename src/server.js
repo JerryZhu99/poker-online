@@ -33,30 +33,51 @@ io.on('connection', function(socket){
     io.emit("update", table.synchronize());
     
     io.emit('message', "User connected: "+users+" users online");
-
+    socket.on('username', function(name){
+        socket.username = name;
+        io.emit("update", table.synchronize());        
+    });
     socket.on('message', function(message){
         io.emit('message', "Message: " + message);
     })
     socket.on('check', function(){
-        if(table.isCurrentPlayer(socket)){
-            table.playerChecked();
-            io.emit("message", `${socket.id} checked`)
-            io.emit("update", table.synchronize());
+        if(!table.isCurrentPlayer(socket)){
+            socket.emit("message", "Error: Not your turn.");
+            return;
         }
+        table.playerChecked();
+        io.emit("message", `${socket.id} checked`)
+        io.emit("update", table.synchronize());
     })
     socket.on('raise', function(amount){
-        if(table.isCurrentPlayer(socket)){
-            table.playerRaised(amount);
-            io.emit("message", `${socket.id} raised by ${amount}`)            
-            io.emit("update", table.synchronize());
+        if(!table.isCurrentPlayer(socket)){
+            socket.emit("message", "Error: Not your turn.");
+            return;
         }
+        if (socket.stageRaised > 0){
+            socket.emit("message", "Error: You already raised.");            
+        }
+        amount = Number(amount);
+        if(isNaN(amount)){
+            socket.emit("message", "Error: Raise is not a number.");                
+            return;
+        }
+        if(amount <= 0){
+            socket.emit("message", "Error: Raise is less than 1.");
+        }
+
+        table.playerRaised(amount);
+        io.emit("message", `${socket.id} raised by ${amount}`)            
+        io.emit("update", table.synchronize());
     })
     socket.on('fold', function(){
-        if(table.isCurrentPlayer(socket)){
-            table.playerFolded();
-            io.emit("message", `${socket.id} folded`)            
-            io.emit("update", table.synchronize());
+        if(!table.isCurrentPlayer(socket)){
+            socket.emit("message", "Error: Not your turn.");
+            return;
         }
+        table.playerFolded();
+        io.emit("message", `${socket.id} folded`)            
+        io.emit("update", table.synchronize());
     })
     socket.on('disconnect', function(){
         users--;

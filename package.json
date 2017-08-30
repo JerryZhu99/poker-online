@@ -20,7 +20,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "webpack",
-    "build-dev": "webpack --progress --colors --watch",
+    "dev": "webpack --progress --colors --watch",
     "test": "webpack -w --config webpack-test.config.js"
   },
   "name": "poker-online",

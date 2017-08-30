@@ -38,13 +38,14 @@ export default class Table {
         let winners = [];
 
         if (this.playersFolded == this.playersPlaying - 1){
-            winners = [(this.getCurrentPlayer()+1)%this.players.length];
+            winners.push(this.players.find((p)=>(p.playing)));
         }else{
             winningHands = this.getWinners();
+            for (var i = 0; i < winningHands.length; i++) {
+                winners.push(winningHands[i].player);
+            }
         }
-        for (var i = 0; i < winningHands.length; i++) {
-            winners.push(winningHands[i].player);
-        }
+
         let winnersSet = new Set(winners);
         for (let winner of winnersSet) {
             for (var i = 0; i < this.players.length; i++)
@@ -109,6 +110,7 @@ export default class Table {
             }
             this.table = table;
             this.currentStage = state.currentStage;
+            this.currentPlayer = state.currentPlayer;
             this.playersFolded = state.playersFolded;
             this.playersAllIned = state.playersAllIned;
             for (let i = 0; i < state.players.length; i++) {
@@ -128,6 +130,7 @@ export default class Table {
         data.pot = this.pot;
         data.table = this.table;
         data.currentStage = this.currentStage;
+        data.currentPlayer = this.currentPlayer;
         data.playersFolded = this.playersFolded;
         data.playersAllIned = this.playersAllIned;
         data.players = [];

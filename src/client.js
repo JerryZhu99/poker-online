@@ -13,8 +13,8 @@ table.addPlayer(socket);
 table.check = function(){
     socket.emit("check");
 }
-table.raise = function(){
-    socket.emit("raise")
+table.raise = function(amount){
+    socket.emit("raise", amount)
 }
 table.fold = function(){
     socket.emit("fold");
@@ -27,6 +27,8 @@ export const view = new Vue({
         messages: ["Start of messages"],
         newMessage: "",
         table: table,
+        raiseOther:false,
+        raiseAmount:100
     },
     computed: {
         player: function(){
@@ -35,11 +37,11 @@ export const view = new Vue({
     }
 });
 
-
+/*
 document.getElementById("check").addEventListener("click", table.check);
 document.getElementById("raise").addEventListener("click", table.raise);
 document.getElementById("fold").addEventListener("click", table.fold);
-
+*/
 
 socket.on("cards", function(data){
     view.player.cards = [];    
@@ -61,12 +63,24 @@ socket.on("result", function (data) {
     
 
 function send(event) {
-    socket.emit("message", view.newMessage);
-    view.newMessage = "";
+    if(view.newMessage[0]=="/"){
+        let data = view.newMessage.split(" ");
+        let command = data.splice(0, 1)[0].split("").slice(1).join("");
+        console.log("Command:"+command)
+        socket.emit(command, data);
+        view.newMessage = "";        
+    }else{
+        socket.emit("message", view.newMessage);
+        view.newMessage = "";
+    }
 }
 
 document.getElementById("send").addEventListener("submit", send);
 
 socket.on('message', function (data) {
     view.messages.push(data);
+    Vue.nextTick(function(){
+        let messages = document.querySelector("#messages");
+        messages.scrollTop = messages.scrollHeight;
+    });
 });

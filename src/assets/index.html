@@ -12,26 +12,55 @@
 <body>
     <div id="wrapper">
         <div id="opponents">
-            <div class="card-container" v-for="opponent in table.players" v-if="opponent.id != player.id">
-                <card :card="card" v-for="card in opponent.cards">
+            <div class="opponent" v-for="opponent in table.players" v-if="opponent.id != player.id">
+                <div class="card-container">
+                    <card :card="card" v-for="card in opponent.cards">
+                </div>
+                <div class="opponent-info">
+                    <span>{{opponent.username?opponent.username:"Guest"}}: {{opponent.chips}}</span>
+                    <span class="turn" v-if="table.getCurrentPlayer() == opponent"></span>
+                </div>
             </div>
         </div>
         <div id="table">
-            <div class="card-container">
-                <card :card="card" v-for="card in table.table"></card>
+            <div id="table-cards">
+                <div class="card-container">
+                    <card :card="card" v-for="card in table.table"></card>
+                </div>
+                <div id="pot">
+                    <span>Pot: {{table.pot}}</span>
+                </div>
             </div>
         </div>
         <div id="player">
-            <div class="card-container">
-                <card :card="card" v-for="card in player.cards"></card>
+            <div id="player-cards">
+                <div class="card-container">
+                    <card :card="card" v-for="card in player.cards"></card>
+                </div>
             </div>
             <div id="actions">
-                <input id="check" type="button" value="Check">
-                <input id="raise" type="button" value="Raise">
-                <input id="fold" type="button" value="Fold">
+                <div id="player-info">
+                    {{player.username?player.username:"You"}}: {{player.chips}}
+                    <span class="turn" v-if="table.getCurrentPlayer() == player"></span>                    
+                </div>
+                <input type="button" value="Check" v-on:click="table.check()">
+                <div v-if="raiseOther">
+                    <input type="text" v-model="raiseAmount">
+                    <input type="button" value="Raise" v-on:click="table.raise(raiseAmount); raiseOther=false">
+                    <input type="button" value="Cancel" v-on:click="raiseOther = false">
+                </div>
+                <div v-else>
+                    <input type="button" value="Raise 100" v-on:click="table.raise(100)">
+                    <input type="button" value="Raise 200" v-on:click="table.raise(200)">
+                    <input type="button" value="Raise Other" v-on:click="raiseOther = true">
+                </div>
+
+                <input type="button" value="Fold" v-on:click="table.fold()">
             </div>
-            <div id="messages">
-                <p class="message" v-for="message in messages">{{message}}</p>
+            <div id="message-container">
+                <div id="messages">
+                    <p class="message" v-for="message in messages">{{message}}</p>                        
+                </div>
                 <form id="send" name="send" onsubmit="return false">
                     <input type="text" v-model="newMessage">
                     <input type="submit" value="Send">
