@@ -141,6 +141,7 @@ export default class Table {
                 chips: player.chips,
                 stageBet: player.stageBet,
                 stageRaise: player.stageRaised,
+                username: player.username
             };
             if (this.currentStage == 4) { // check if reveal
                 p.cards = player.cards;

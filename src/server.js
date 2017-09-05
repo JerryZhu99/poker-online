@@ -38,7 +38,8 @@ io.on('connection', function(socket){
         io.emit("update", table.synchronize());        
     });
     socket.on('message', function(message){
-        io.emit('message', "Message: " + message);
+        let name = socket.username?socket.username:"Guest";
+        io.emit('message', `${name}: ${message}`);
     })
     socket.on('check', function(){
         if(!table.isCurrentPlayer(socket)){
@@ -46,7 +47,8 @@ io.on('connection', function(socket){
             return;
         }
         table.playerChecked();
-        io.emit("message", `${socket.id} checked`)
+        let name = socket.username?socket.username:"Guest";        
+        io.emit("message", `${name} checked`);
         io.emit("update", table.synchronize());
     })
     socket.on('raise', function(amount){
@@ -67,7 +69,8 @@ io.on('connection', function(socket){
         }
 
         table.playerRaised(amount);
-        io.emit("message", `${socket.id} raised by ${amount}`)            
+        let name = socket.username?socket.username:"Guest";                
+        io.emit("message", `${name} raised by ${amount}`)            
         io.emit("update", table.synchronize());
     })
     socket.on('fold', function(){
@@ -76,7 +79,8 @@ io.on('connection', function(socket){
             return;
         }
         table.playerFolded();
-        io.emit("message", `${socket.id} folded`)            
+        let name = socket.username?socket.username:"Guest";                        
+        io.emit("message", `${name} folded`)            
         io.emit("update", table.synchronize());
     })
     socket.on('disconnect', function(){

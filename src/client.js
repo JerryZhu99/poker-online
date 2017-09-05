@@ -67,7 +67,7 @@ function send(event) {
         let data = view.newMessage.split(" ");
         let command = data.splice(0, 1)[0].split("").slice(1).join("");
         console.log("Command:"+command)
-        socket.emit(command, data);
+        socket.emit(command, ...data);
         view.newMessage = "";        
     }else{
         socket.emit("message", view.newMessage);
