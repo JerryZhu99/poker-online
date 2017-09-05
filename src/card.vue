@@ -1,19 +1,19 @@
 <template>
-    <div class="card" v-bind:class="{ red: (card.suit == 0 || card.suit == 2)}">
-        <div class="card-front" v-if="card.value >= 0">
-            <div class="card-top">
+    <div class="playing-card" v-bind:class="{ red: (card.suit == 0 || card.suit == 2)}">
+        <div class="playing-card-front" v-if="card.value >= 0">
+            <div class="playing-card-top">
                 {{card.valuestr}}
                 <br> {{card.suitstr}}
             </div>
-            <div class="card-center">
+            <div class="playing-card-center">
                 {{card.suitstr}}
             </div>
-            <div class="card-bottom">
+            <div class="playing-card-bottom">
                 {{card.valuestr}}
                 <br> {{card.suitstr}}
             </div>
         </div>
-        <div class="card-back" v-else>
+        <div class="playing-card-back" v-else>
             
         </div>
     </div>
@@ -25,7 +25,10 @@
 </script>
 <style scoped>
     @import url('https://fonts.googleapis.com/css?family=Oswald');
-    .card {
+    *{
+        box-sizing: border-box;
+    }
+    .playing-card {
         font-family: 'Oswald', sans-serif;
         padding: 5px;
         margin: 10px;
@@ -35,7 +38,7 @@
         background-color: #FFFFFF;
         border-radius: 10px;
     }
-    .card-front{
+    .playing-card-front{
         padding: 5px;
         width: 100%;
         height: 100%;
@@ -43,24 +46,29 @@
         flex-direction: column;
         justify-content: space-between;
     }
-    .card-top {
+    .playing-card-top {
         align-self: flex-start;
+        flex: 1 1;
     }
 
-    .card-center {
+    .playing-card-center {
         height: 60px;
         font-size: 50px;
         line-height: 60px;
+        margin: -40px 0;
         vertical-align: middle;
         align-self: center;
+        flex: 1 1;
     }
 
-    .card-bottom {
+    .playing-card-bottom {
         align-self: flex-end;
+        flex: 1 1;
         transform: rotate(180deg)
+        
     }
 
-    .card-back {
+    .playing-card-back {
         width: 100%;
         height: 100%;
         border-radius: 10px;

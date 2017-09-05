@@ -2,7 +2,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 var nodeExternals = require('webpack-node-externals');
-
+var webpack = require('webpack');
 
 
 module.exports = [{
@@ -41,11 +41,18 @@ module.exports = [{
             }),
             new ExtractTextPlugin({
                 filename: "index.css",
-            })
+            }),
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery',
+                Popper: ['popper.js', 'default'],
+            }),
         ],
         resolve: {
             modules: [
                 "src",
+                "assets",
                 "node_modules",
             ],
             alias: {
