@@ -55,7 +55,7 @@
         height: 60px;
         font-size: 50px;
         line-height: 60px;
-        margin: -40px 0;
+        margin: -30px 0;
         vertical-align: middle;
         align-self: center;
         flex: 1 1;

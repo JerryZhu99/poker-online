@@ -147,9 +147,7 @@
         height: 100%;
         overflow: hidden;
         font-family: "Open Sans", sans-serif;
-    }
-
-    #wrapper {
+        height: calc(100vh - 56px);
         background-color: #085D14;
         position: relative;
         box-shadow: inset 0 2em 16em 2em rgba(0, 0, 0, 0.5);
@@ -192,13 +190,19 @@
 
     #table {
         height: 40%;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-around;
+        display: flex;
+        justify-content: center;
     }
 
     #table-cards {
         flex: 1;
         max-width: 50%
+    }
+
+    #pot{
+        align-self: flex-end;
     }
 
     #player {
