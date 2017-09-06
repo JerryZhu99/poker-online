@@ -43,6 +43,9 @@
   },
   "keywords": [],
   "author": "Jerry Zhu",
+  "contributors": [
+    "Modan Han"
+  ],
   "license": "MIT",
   "description": ""
 }
