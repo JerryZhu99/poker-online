@@ -4,11 +4,20 @@ import httpModule from 'http';
 const http = httpModule.Server(app);
 import socketIO from 'socket.io';
 const io = socketIO(http);
+import path from 'path';
 
 import Deck from 'deck';
 import Table from 'texas';
 
 app.use(express.static('dist'));
+const routes = [
+    "/",
+    "/lobbies",
+    "/game/:id"
+]
+app.get(routes, (req, res)=>{
+    res.sendFile(path.resolve("./dist/index.html"));
+});
 
 export var users = 0;
 
