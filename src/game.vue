@@ -87,13 +87,14 @@
 
     };
     export default {
+        props: ['id'],
         data: () => (view),
         computed: {
             player: function () {
                 return this.table.players.find((p) => (p.id == socket.id))
             }
         },
-        methods:{
+        methods: {
             send(event) {
                 if (view.newMessage[0] == "/") {
                     let data = view.newMessage.split(" ");
@@ -107,8 +108,14 @@
                 }
             }
         },
+        beforeRouteUpdate(to, from, next) {
+            socket.emit("game", this.id);
+            next();
+        },
         created() {
+            socket.emit("game", this.id);
             var view = this;
+            console.log(view)
             socket.on("cards", function (data) {
                 view.player.cards = [];
                 data.forEach(function (card) {
@@ -201,7 +208,7 @@
         max-width: 50%
     }
 
-    #pot{
+    #pot {
         align-self: flex-end;
     }
 

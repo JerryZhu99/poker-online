@@ -4,7 +4,7 @@ import "bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "main.css";
 import Welcome from "welcome.vue";
-import Lobbies from "lobbies.vue";
+import Games from "games.vue";
 import Game from "game.vue";
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -12,8 +12,8 @@ Vue.use(VueRouter);
 
 const routes = [
     {path: "/", component: Welcome},
-    {path: "/lobbies", component: Lobbies},
-    {path: "/game/:id", component: Game},
+    {path: "/games", component: Games},
+    {path: "/game/:id", component: Game, props: true},
 ]
 const router = new VueRouter({
     routes, 
